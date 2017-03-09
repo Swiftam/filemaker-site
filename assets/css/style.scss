@@ -1,6 +1,7 @@
 ---
 ---
-/*@import "{{ site.theme }}";*/
+$page-width: 1127px;
+
 .HeaderSection{padding: 20px; text-align: center;  background: #1B1C1D; position: fixed;  z-index: 999999999; 
                width: 100%;box-shadow: 0 1px 3px rgba(2,3,3,.3), inset 0 4px 0 #f0464c; color: #fff;
 }
@@ -13,7 +14,22 @@
 	background-color: white;
 	position:fixed;
 	z-index: 9999999;
-	width: 100%;
+}
+
+.ui {
+    .container {
+        position: relative;
+    }
+    
+    .search {
+        float: right;
+        right: 0;
+        top: 1em;
+        
+        @media all and (max-width: 730px) {
+            display: none;
+        }
+    }
 }
 
 .siteIntro {

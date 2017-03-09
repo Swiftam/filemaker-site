@@ -4,6 +4,14 @@
   <body>
     <div class="ui container">
 
+        <div class="ui right aligned category search">
+          <div class="ui icon input">
+            <input class="prompt" type="text" placeholder="Search...">
+            <i class="search icon"></i>
+          </div>
+          <div class="results"></div>
+        </div>
+
       {{ content }}
 
   {% if site.google_analytics %}
@@ -22,5 +30,53 @@
 		This content is the sole work of Daniel Shanahan of <a href="http://www.newleafdata.com">New Leaf Data, LLC</a>. &copy;{{ site.time | date: '%Y' }}
     </footer>
     </div>
+    
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('.ui.search').search({
+            minCharacters: 3,
+            type: 'category',
+            apiSettings: {
+                url: '{{ site.baseurl }}/categories.json',
+                onResponse: function(data) {
+                    var maxResults = 3;
+                    var response = { success: true, results: {} };
+                    var searchTerms = $('.search input').val().toLowerCase();
+                    for ( var category in data.results ) {
+                        var index = 0;
+                        var categoryResults = data.results[category].results.filter(function(result){
+                                if ( index >= maxResults ) return false;
+
+                                if ( result.content.toLowerCase().indexOf(searchTerms) >= 0) {
+                                    index++;
+                                    return true;
+                                }
+
+                                if ( result.title.toLowerCase().indexOf(searchTerms) >= 0) {
+                                    index++;
+                                    return true;
+                                }
+
+                                if ( result.description.toLowerCase().indexOf(searchTerms) >= 0) {
+                                    index++;
+                                    return true;
+                                }
+                                return false;
+                            });
+                            
+                            if ( categoryResults.length > 0 ) {
+                                response.results[category] = {
+                                    name: data.results[category].name,
+                                    results: categoryResults
+                                };
+                            }
+                    }
+                    console.log(response);
+                    return response;
+                }
+            }
+        });
+    });
+    </script>
   </body>
 </html>
